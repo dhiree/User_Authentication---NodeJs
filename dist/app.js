@@ -1,50 +1,40 @@
-import mongoose from 'mongoose';
-import express, { Router } from "express"
-import dotenv from 'dotenv'
-import { Routes } from './interfaces/routes.interface';
-
-dotenv.config()
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const mongoose_1 = tslib_1.__importDefault(require("mongoose"));
+const express_1 = tslib_1.__importDefault(require("express"));
+const dotenv_1 = tslib_1.__importDefault(require("dotenv"));
+dotenv_1.default.config();
 class App {
-    public app: express.Application;
-    public port: number;
-
-    constructor(routes: Routes[]) {
-        this.app = express();
+    constructor(routes) {
+        this.app = express_1.default();
         this.port = 8000;
-
         this.configureMiddleware();
         this.connectDatabase();
         this.initializeRoutes(routes);
     }
-
-    private configureMiddleware(): void {
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
+    configureMiddleware() {
+        this.app.use(express_1.default.json());
+        this.app.use(express_1.default.urlencoded({ extended: true }));
     }
-
-    private connectDatabase(): void {
+    connectDatabase() {
         const mongoUri = process.env.MONGODB_URI;
         if (!mongoUri) {
             console.error('MongoDB URI missing in .env file');
             process.exit(1);
         }
-
-        mongoose.connect(mongoUri, {
-        }).then(() => {
+        mongoose_1.default.connect(mongoUri, {}).then(() => {
             console.log('Connected to MongoDB');
         }).catch((error) => {
             console.error('MongoDB connection error:', error);
         });
     }
-
-    private initializeRoutes(routes: Routes[]) {
+    initializeRoutes(routes) {
         routes.forEach(route => {
-            this.app.use('/worko', route.router);
+            this.app.use('/', route.router);
         });
     }
-    public async listen() {
-
+    async listen() {
         this.app.listen(this.port, () => {
             console.log("app start ", this.port);
             console.log(`=================================`);
@@ -52,9 +42,9 @@ class App {
             console.log(`=================================`);
         });
     }
-    public getServer() {
+    getServer() {
         return this.app;
     }
 }
-
-export default App;
+exports.default = App;
+//# sourceMappingURL=app.js.map
