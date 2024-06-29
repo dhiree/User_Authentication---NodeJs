@@ -97,7 +97,6 @@ class UserController {
                 data: { msg: "User Deleted" }
             })
         } catch (error) {
-            console.log("user not deleted")
             next(error)
         }
     }
